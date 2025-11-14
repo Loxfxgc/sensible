@@ -1,0 +1,24 @@
+all:
+  children:
+    webservers:
+      hosts:
+        web1:
+          ansible_host: 172.25.0.10
+        web2:
+          ansible_host: 172.25.0.11
+      vars:
+        http_port: 80
+        domain: example.com
+
+    databases:
+      hosts:
+        db1:
+          ansible_host: 172.25.0.20
+      vars:
+        db_port: 5432
+        db_name: appdb
+
+  vars:
+    ansible_user: root
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

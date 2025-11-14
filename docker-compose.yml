@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  web1:
+    build: .
+    hostname: web1
+    container_name: ansible_web1
+    ports:
+      - "2221:22"
+      - "8081:80"
+    networks:
+      ansible_net:
+        ipv4_address: 172.25.0.10
+
+  web2:
+    build: .
+    hostname: web2
+    container_name: ansible_web2
+    ports:
+      - "2222:22"
+      - "8082:80"
+    networks:
+      ansible_net:
+        ipv4_address: 172.25.0.11
+
+  db1:
+    build: .
+    hostname: db1
+    container_name: ansible_db1
+    ports:
+      - "2223:22"
+      - "5432:5432"
+    networks:
+      ansible_net:
+        ipv4_address: 172.25.0.20
+
+networks:
+  ansible_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16

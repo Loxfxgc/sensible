@@ -1,0 +1,23 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+- name: Install common packages
+  apt:
+    name:
+      - curl
+      - vim
+      - git
+      - htop
+      - net-tools
+    state: present
+
+- name: Create application user
+  user:
+    name: appuser
+    state: present
+    shell: /bin/bash
+    create_home: yes

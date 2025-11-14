@@ -1,0 +1,47 @@
+---
+- name: Install PostgreSQL
+  apt:
+    name:
+      - postgresql
+      - postgresql-contrib
+      - python3-psycopg2
+    state: present
+    update_cache: yes
+
+- name: Ensure PostgreSQL is running
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Create database
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_become_tmpdir: /tmp
+  community.postgresql.postgresql_db:
+    name: "{{ db_name }}"
+    state: present
+
+- name: Create database user
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_become_tmpdir: /tmp
+  community.postgresql.postgresql_user:
+    name: appuser
+    password: "{{ db_password | default('changeme') }}"
+    state: present
+
+- name: Grant ALL privileges on the database to the user
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_become_tmpdir: /tmp
+  community.postgresql.postgresql_privs:
+    database: "{{ db_name }}"
+    type: database
+    roles: appuser
+    privs: ALL
+    state: present
+
